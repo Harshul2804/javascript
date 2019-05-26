@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="highcharts.css">
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+	<title></title>
+</head>
+<body>
+<div id="container">
+
+
+</div>
+</body>
+<script type="text/javascript">
+// var USDarr = [][]
+
+var ch = Highcharts.chart('container', {
+
+    title: {
+        text: 'Rate of Bitcoin in USD , GBP , EUR'
+    },
+
+    subtitle: {
+        text: 'Source:www.coindesk.com'
+    },
+
+    xAxis: {
+    	title: {
+            text: 'Time'
+
+        },
+        type:'datetime'
+    },
+
+    yAxis: {
+        title: {
+            text: 'Rate of Bitcoin'
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            },
+            pointStart: 1
+        }
+    },
+
+    series: [{
+                name: 'crime',
+                data: []
+            },
+
+            {
+                name: 'pollution',
+                data: []
+            },
+
+            {
+                name: 'EUR',
+                data: []
+            },
+
+
+
+    ],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+
+});
+
+setInterval(function(){
+    	let harshul=new XMLHttpRequest;
+	harshul.addEventListener('load',function(){
+		var dataUSD = [(new Date).getTime(),JSON.parse(this.responseText).bpi.USD.rate_float]
+		ch.series[0].addPoint(dataUSD);
+
+		var GBP = [(new Date).getTime(),JSON.parse(this.responseText).bpi.GBP.rate_float]
+		ch.series[1].addPoint(GBP);
+
+		var EUR = [(new Date).getTime(),JSON.parse(this.responseText).bpi.EUR.rate_float]
+		ch.series[2].addPoint(EUR);
+		//temp=temp.replace(/\,/g,'');
+		//USDarr.push(parseFloat(temp))
+		//console.log(GBP)
+
+	})
+	harshul.addEventListener('error',function(){
+		console.log(this.responseText)
+	});
+	harshul.open('GET',"https://api.coindesk.com/v1/bpi/currentprice.json");
+	harshul.send();
+
+
+	
+},1000)
+
+
+
+
+
+</script>
+</html>
